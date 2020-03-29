@@ -1,19 +1,40 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 import { FiLogIn } from "react-icons/fi";
-import "./styles.css";
+import api from "../../services/api";
 
+import "./styles.css";
 import logoImg from "../../assets/logo.svg";
 import heroesImg from "../../assets/heroes.png";
 
 export default function Login() {
+  const [id, setId] = useState("");
+  const history = useHistory();
+
+  const handleLogin = async event => {
+    event.preventDefault();
+
+    try {
+      const response = await api.post("/login", { id });
+      localStorage.setItem("ongId", id);
+      localStorage.setItem("ongName", response.data.name);
+      history.push("/profile");
+    } catch (error) {
+      alert("Falha no login, tente novamente");
+    }
+  };
+
   return (
     <div className="login-container">
       <section className="form">
         <img src={logoImg} alt="Logo" />
-        <form>
+        <form onSubmit={handleLogin}>
           <h1>Faça seu login</h1>
-          <input placeholder="Seu ID" />
+          <input
+            placeholder="Seu ID"
+            value={id}
+            onChange={event => setId(event.target.value)}
+          />
           <button className="button" type="submit">
             Entrar
           </button>

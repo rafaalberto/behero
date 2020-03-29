@@ -3,10 +3,8 @@ const OngService = require("../services/OngService");
 module.exports = {
   async create(request, response) {
     try {
-      const [id] = await OngService.create(request, response);
-      return response
-        .status(201)
-        .json({ message: `ONG created successfully: ${id}` });
+      const id = await OngService.create(request, response);
+      return response.status(201).json({ id });
     } catch (error) {
       return response.status(400).json({ message: error });
     }
